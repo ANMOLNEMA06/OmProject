@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medifast - Healthcare at Your Fingertips</title>
+    <!--Here I connect all pages files to the index.html -Sumit -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="book-lab.css">
+    <link rel="stylesheet" href="consult-doctor.css">
+    <link rel="stylesheet" href="health-checkup.css">
+    <link rel="stylesheet" href="order-medicines.css">
+    <link rel="stylesheet" href="support.css">
+
+
+
+
+
+
+    
+
+    
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo">Medifast</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><button class="login-btn" id="toggle-login">Login</button></li>
+            </ul>
+        </nav>
+       
+
+    </header>
+
+    
+    <main>
+        <section class="hero" id="home">
+            <h1>Expert Healthcare at Your Fingertips</h1>
+            <p>Book doctor consultations, lab tests, and buy medicines online.</p>
+        
+            <!-- Location Search Bar (directly below the header) -->
+            <div class="location-container">
+                <input type="text" id="location-input" placeholder="Enter your city">
+                <button id="detect-location">
+                    Get Started
+                </button>
+            </div>
+        </section>
+        
+        
+        
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="feature-box">
+                <a href="consult-doctor.html" target="_blank">
+                    <img src="images/doctor.png" alt="Consult Doctors">
+                    <h2>Consult Doctors</h2>
+                    <p>Talk to expert doctors anytime, anywhere.</p>
+                </a>
+            </div>
+            <div class="feature-box">
+                <a href="order-medicines.html" target="_blank">
+                    <img src="images/medicine.png" alt="Order Medicines">
+                    <h2>Order Medicines</h2>
+                    <p>Get medicines delivered to your doorstep.</p>
+                </a>
+            </div>
+            <div class="feature-box">
+                <a href="book-lab.html" target="_blank">
+                    <img src="images/labtest .png" alt="Book Lab Tests">
+                    <h2>Book Lab Tests</h2>
+                    <p>Get lab tests done at home with ease.</p>
+                </a>
+            </div>
+            <div class="feature-box">
+                <a href="health-checkup.html" target="_blank">
+                    <img src="images/healthcheckup.png" alt="Health Checkups">
+                    <h2>Health Checkups</h2>
+                    <p>Comprehensive health checkups for your well-being.</p>
+                </a>
+            </div>
+            <div class="feature-box">
+                <a href="support.html" target="_blank">
+                    <img src="images/service.png" alt="24/7 Support">
+                    <h2>24/7 Support</h2>
+                    <p>Get assistance anytime you need medical help.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Medifast. All rights reserved.</p>
+    </footer>
+    <!-- Login Modal -->
+<div class="login-modal" id="loginModal">
+    <div class="login-box">
+        <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+        <h2>Login</h2>
+        <div class="login-options">
+            <button class="option-btn" onclick="showOtpLogin()">Login with OTP</button>
+            <button class="option-btn" onclick="showFormLogin()">Login with Form</button>
+        </div>
+
+        <!-- OTP Section -->
+        <div class="otp-section" id="otpSection">
+            <input type="text" id="phone" placeholder="Enter phone number">
+            <input type="text" id="otp" placeholder="Enter OTP">
+            <button id="verify-otp">Verify OTP</button>
+        </div>
+
+        <!-- Form Section -->
+        <form class="login-form" id="loginForm">
+            <input type="text" placeholder="Username" id="username">
+            <input type="password" placeholder="Password" id="password">
+            <button type="submit" id="submit-btn">Login</button>
+        </form>
+    </div>
+</div>
+
+
+    <script src="script.js"></script>
+    <script src="book-lab.js"></script>
+    <script src="consult-doctor.js"></script>
+    <script src="health-checkup.js"></script>
+    <script src="order-medicines.js"></script>
+    <script src="support.js"></script>
+    
+</body>
+</html>
+

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediTest - Find Medical Test Providers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Header styles */
+        header {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .login-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: white;
+            color: #3498db;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Main container for sidebar and content */
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 320px;
+            background: linear-gradient(to bottom, #2c3e50, #3498db);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .search-container {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .categories-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
+        }
+        
+        .category {
+            margin-bottom: 10px;
+        }
+        
+        .category-header {
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .category-header:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-header i {
+            transition: transform 0.3s;
+        }
+        
+        .tests-list {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+       
+        .tests-list.show {
+            max-height: 500px;
+        }
+        
+        .test-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .test-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Hero section styles */
+        .hero-section {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+            min-height: 300px;
+        }
+        
+        
+           
+        .hero-content {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .hero-text {
+            margin-bottom: 20px;
+        }
+        
+        .hero-text h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .hero-text p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            align-self: flex-start;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .cta-button:hover {
+            background: #2980b9;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+        
+        .content-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .content-header h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .content-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .labs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 25px;
+        }
+        
+        .lab-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .lab-info {
+            display: flex;
+            padding: 20px;
+        }
+        
+        .lab-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .lab-details {
+            flex: 1;
+        }
+        
+        .lab-name {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .lab-address {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .lab-meta {
+            display: flex;
+            gap: 15px;
+            color: #3498db;
+            font-size: 0.9rem;
+        }
+        
+        .lab-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .upload-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .upload-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .upload-area:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .upload-button {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .hero-section {
+                flex-direction: column;
+            }
+            
+            .hero-image {
+                min-height: 200px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-height: 400px;
+            }
+            
+            .labs-container {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .lab-info {
+                flex-direction: column;
+            }
+            
+            .lab-image {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .labs-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        .container {
+ display: grid;
+ align-items: center; 
+ grid-template-columns: 1fr 1fr 1fr;
+ column-gap: 5px;
+}
+
+.img {
+  max-width: 100%;
+  max-height:100%;
+}
+
+.text {
+  font-size: 70px;
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Medifast</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><button class="login-btn" id="toggle-login">Login</button></li>
+  
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main container for sidebar and content -->
+    <div class="main-container">
+        <!-- Sidebar with test categories -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>MediTest</h1>
+                <p>Find medical tests and providers</p>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search for tests...">
+            </div>
+            
+            <div class="categories-container">
+                <!-- Blood Tests Category -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>Blood Tests</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="tests-list">
+                        <div class="test-item" onclick="showLabs('Complete Blood Test')">Complete Blood Test</div>
+                        <div class="test-item" onclick="showLabs('Kidney Function Test')">Kidney Function Test</div>
+                        <div class="test-item" onclick="showLabs('Liver Function Test')">Liver Function Test</div>
+                        <div class="test-item" onclick="showLabs('Lipid Profile')">Lipid Profile</div>
+                        <div class="test-item" onclick="showLabs('Blood Glucose Test')">Blood Glucose Test</div>
+                    </div>
+                </div>
+                
+                <!-- Scanning Tests Category -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>Scanning Tests</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="tests-list">
+                        <div class="test-item" onclick="showLabs('CT Scan')">CT Scan</div>
+                        <div class="test-item" onclick="showLabs('Ultrasound Scan')">Ultrasound Scan</div>
+                        <div class="test-item" onclick="showLabs('MRI')">MRI</div>
+                        <div class="test-item" onclick="showLabs('X-Ray')">X-Ray</div>
+                        <div class="test-item" onclick="showLabs('Mammography')">Mammography</div>
+                    </div>
+                </div>
+                
+                <!-- Other Tests Category -->
+                <div class="category">
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <span>Other Tests</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="tests-list">
+                        <div class="test-item" onclick="showLabs('Thyroid Test')">Thyroid Test</div>
+                        <div class="test-item" onclick="showLabs('HbA1c')">HbA1c</div>
+                        <div class="test-item" onclick="showLabs('COVID-19 Test')">COVID-19 Test</div>
+                        <div class="test-item" onclick="showLabs('Vitamin D Test')">Vitamin D Test</div>
+                        <div class="test-item" onclick="showLabs('Allergy Test')">Allergy Test</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-image">
+                    <div class="hero-text">
+                       <div class="container">
+                        <img src="microscope.jpeg" height="240" width="320"></img>
+                        <h2 style="text-align: right;">Your Health, Our Priority.</h2>
+                        <p style="text-align: right;"> Advanced diagnostic tests from the comfort of your home. </p>
+                        <p style="text-align: right;"> Book with confidence and convenience.</p>
+                    </div>
+                </div>
+</div>
+                <div class="hero-content">
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="tests-completed">0</div>
+                            <div class="stat-label">Tests Completed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="accuracy-rate">0%</div>
+                            <div class="stat-label">Accuracy Rate</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="test-types">0</div>
+                            <div class="stat-label">Test Types</div>
+                        </div>
+                    </div>
+                    <div class="hero-text">
+                        <h2>Quality Healthcare Made Simple</h2>
+                        <p>Access a wide range of medical tests with reliable results. Our network of certified labs ensures accurate diagnostics and timely reports.</p>
+                    </div>
+                    <button class="cta-button">Book a Test Now</button>
+                </div>
+            </div>
+            
+            <div class="content-header">
+                <h2>Find Medical Test Providers</h2>
+                <p>Select a test from the sidebar to find labs near you</p>
+            </div>
+            
+            <div class="labs-container" id="labsContainer">
+                <!-- Labs will be displayed here -->
+                <div class="welcome-message">
+                    <p>Please select a medical test from the sidebar to see available labs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lab data organized by test type
+        const labData = {
+            "Complete Blood Test": [
+                {
+                    name: "Agilus Diagnostics",
+                    address: "MR 4 Road, SBI Chowk, Vijay Nagar, Jabalpur ‑ 482002 (Beside BSNL Office)",
+                    image: "lab.png",
+                    rating: 4.5,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Dr Lal PathLabs",
+                    address: "Main Road Adhartal, Between HDFC & ICICI, Anand Nagar, Adhartal, Jabalpur ‑ 482004",
+                    image: "lab.png",
+                    rating: 4.7,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Redcliffe Labs",
+                    address: "House No. 19, Tilhari Mandla Road, Near Jabalpur Sports Club, Jabalpur ‑ 482001",
+                    image: "https://placehold.co/100x100/2ecc71/white?text=Redcliffe",
+                    rating: 4.3,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Metropolis Healthcare",
+                    address: "No 2737K, Lal Kuaa, Polipathaar, Gwarighat Road, Jabalpur ‑ 482008",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Bansal Pathology Centre and Blood Bank",
+                    address: "Sukheja Tower, 2nd Lane, Behind Bus Stand, Wright Town, Jabalpur ‑ 482002",
+                    image: "https://placehold.co/100x100/f39c12/white?text=Bansal",
+                    rating: 4.2,
+                    waitTime: "Same day"
+                }
+            ],
+            "Kidney Function Test": [
+                {
+                    name: "Dr Lal PathLabs",
+                    address: "Shop No. 790, Near HDFC Bank, Adhartal, Jabalpur ‑ 482004",
+                    image: "https://placehold.co/100x100/e74c3c/white?text=Dr+Lal",
+                    rating: 4.7,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Metropolis Healthcare",
+                    address: "No. 2737K, Lal Kuaa, Polipathaar, Gwarighat Road, Jabalpur ‑ 482008 (Near South Avenue Mall)",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Agilus Diagnostics",
+                    address: "Main Road, Ranjhi, Jabalpur ‑ 482005, opposite Police Station",
+                    image: "https://placehold.co/100x100/3498db/white?text=Agilus",
+                    rating: 4.5,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Pathkind Labs",
+                    address: "Shop No 5, 6, Plot No B, Scheme No 5, Near Salby Hospital, Vijay Nagar, Jabalpur ‑ 482001",
+                    image: "https://placehold.co/100x100/8e44ad/white?text=Pathkind",
+                    rating: 4.4,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Jabalpur Hospital & Research Centre — Pathology Department",
+                    address: "Jabalpur Hospital and Research Centre, Jabalpur",
+                    image: "https://placehold.co/100x100/34495e/white?text=Jabalpur",
+                    rating: 4.3,
+                    waitTime: "Same day"
+                }
+            ],
+            "Liver Function Test": [
+                {
+                    name: "Dr Lal PathLabs",
+                    address: "Shop No. 790, Near HDFC Bank, Adhartal, Jabalpur ‑ 482004",
+                    image: "https://placehold.co/100x100/e74c3c/white?text=Dr+Lal",
+                    rating: 4.7,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Metropolis Healthcare",
+                    address: "No. 2737K, Lal Kuaa, Polipathaar, Gwarighat Road, Jabalpur ‑ 482008 (Near South Avenue Mall)",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Agilus Diagnostics",
+                    address: "Main Road, Ranjhi, Jabalpur ‑ 482005, opposite Police Station",
+                    image: "https://placehold.co/100x100/3498db/white?text=Agilus",
+                    rating: 4.5,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Pathkind Labs",
+                    address: "Shop No 5, 6, Plot No B, Scheme No 5, Near Salby Hospital, Vijay Nagar, Jabalpur ‑ 482001",
+                    image: "https://placehold.co/100x100/8e44ad/white?text=Pathkind",
+                    rating: 4.4,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Jabalpur Hospital & Research Centre — Pathology Department",
+                    address: "Jabalpur Hospital and Research Centre, Jabalpur",
+                    image: "https://placehold.co/100x100/34495e/white?text=Jabalpur",
+                    rating: 4.3,
+                    waitTime: "Same day"
+                }
+            ],
+            "CT Scan": [
+                {
+                    name: "M P MRI and CT Scan Centre",
+                    address: "Campus of Netaji Subhash Chandra Bose Medical College, Jabalpur, Madhya Pradesh ‑ 482004",
+                    image: "https://placehold.co/100x100/3498db/white?text=MP+MRI",
+                    rating: 4.6,
+                    waitTime: "2-3 days"
+                },
+                {
+                    name: "Delhi MRI Center",
+                    address: "2243, Prem Mandir, Wright Town, Jabalpur ‑ 482002",
+                    image: "https://placehold.co/100x100/e74c3c/white?text=Delhi+MRI",
+                    rating: 4.4,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Sanya Diagnostics MRI & CT Scan Centre",
+                    address: "Near Pisan Hari Ji Ka Madhiya, Campus of Netaji Subhashchandra Bose Medical College, Bhedaghat Road, Garha, Jabalpur ‑ 482003",
+                    image: "https://placehold.co/100x100/2ecc71/white?text=Sanya",
+                    rating: 4.5,
+                    waitTime: "2-3 days"
+                },
+                {
+                    name: "Modern CT Scan, X‑Ray, Sonography, Pathology & ECG Center",
+                    address: "Behor Bagh, High Court Road, Near Ghamapur Chowk, Jabalpur, MP ‑ 482002",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Modern",
+                    rating: 4.3,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Charak Diagnostic & Research Centre",
+                    address: "1 Civic Centre, Prabhu‑Vandana Building, Marhatal, Jabalpur",
+                    image: "https://placehold.co/100x100/f39c12/white?text=Charak",
+                    rating: 4.7,
+                    waitTime: "1-2 days"
+                }
+            ],
+            "Thyroid Test": [
+                {
+                    name: "Dr Lal PathLabs",
+                    address: "Shop No. 790, Near HDFC Bank, Adhartal, Jabalpur, Madhya Pradesh",
+                    image: "https://placehold.co/100x100/e74c3c/white?text=Dr+Lal",
+                    rating: 4.7,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Metropolis Healthcare Ltd",
+                    address: "No. 2737K, Lal Kuaa, Polipathaar, Gwarighat Road, Jabalpur, 482008. Landmark: Near South Avenue Mall",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Adarsh Pathology Centre",
+                    address: "Plot No. 15A, Coalmine Office Road, Gupteshwar, Shakti Nagar, Jabalpur, Madhya Pradesh ‑ 482001",
+                    image: "https://placehold.co/100x100/3498db/white?text=Adarsh",
+                    rating: 4.2,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Redcliffe Labs",
+                    address: "Raddi Chowki, Opp. Petrol Pump, Near True Care Hospital, Jabalpur, Madhya Pradesh ‑ 482001",
+                    image: "https://placehold.co/100x100/2ecc71/white?text=Redcliffe",
+                    rating: 4.3,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Shubh Pathology & Microbiology Lab",
+                    address: "Opposite Samadariya Mall, Civic Center, Marhatal, Jabalpur, Madhya Pradesh ‑ 482002",
+                    image: "https://placehold.co/100x100/f39c12/white?text=Shubh",
+                    rating: 4.4,
+                    waitTime: "Same day"
+                }
+            ],
+            "HbA1c": [
+                {
+                    name: "Dr Lal PathLabs – Patient Service Centre",
+                    address: "Shop No. 790, Near HDFC Bank, Adhartal, Jabalpur ‑ 482004",
+                    image: "https://placehold.co/100x100/e74c3c/white?text=Dr+Lal",
+                    rating: 4.7,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Metropolis Healthcare Ltd",
+                    address: "Ground Floor, Nehru Nagar, Opposite Medical College Main Gate, Jabalpur, 482001",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Sai Pathology Centre",
+                    address: "Tripuri Chowk, Amanpur Road, Garha, Jabalpur, 482003",
+                    image: "https://placehold.co/100x100/3498db/white?text=Sai",
+                    rating: 4.3,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Apple Pathology Center",
+                    address: "North Civil Line, Ghanta Ghar, Opposite Dr. Bataliya Eye Hospital, Jabalpur City, 482002",
+                    image: "https://placehold.co/100x100/8e44ad/white?text=Apple",
+                    rating: 4.2,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Metropolis Healthcare Ltd",
+                    address: "No. 2737K, Lal Kuaa, Polipathaar, Near South Avenue Mall, Gwarighat Road, Jabalpur, 482008",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                }
+            ],
+            "COVID-19 Test": [
+                {
+                    name: "Agilus Diagnostics",
+                    address: "MR 4 Road, SBI Chowk, Vijay Nagar, Jabalpur ‑ 482002 (Beside BSNL Office)",
+                    image: "https://placehold.co/100x100/3498db/white?text=Agilus",
+                    rating: 4.5,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Dr Lal PathLabs",
+                    address: "Main Road Adhartal, Between HDFC & ICICI, Anand Nagar, Adhartal, Jabalpur ‑ 482004",
+                    image: "https://placehold.co/100x100/e74c3c/white?text=Dr+Lal",
+                    rating: 4.7,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Redcliffe Labs",
+                    address: "House No. 19, Tilhari Mandla Road, Near Jabalpur Sports Club, Jabalpur ‑ 482001",
+                    image: "https://placehold.co/100x100/2ecc71/white?text=Redcliffe",
+                    rating: 4.3,
+                    waitTime: "1-2 days"
+                },
+                {
+                    name: "Metropolis Healthcare",
+                    address: "No 2737K, Lal Kuaa, Polipathaar, Gwarighat Road, Jabalpur ‑ 482008",
+                    image: "https://placehold.co/100x100/9b59b6/white?text=Metropolis",
+                    rating: 4.6,
+                    waitTime: "Same day"
+                },
+                {
+                    name: "Bansal Pathology Centre and Blood Bank",
+                    address: "Sukheja Tower, 2nd Lane, Behind Bus Stand, Wright Town, Jabalpur ‑ 482002",
+                    image: "https://placehold.co/100x100/f39c12/white?text=Bansal",
+                    rating: 4.2,
+                    waitTime: "Same day"
+                }
+            ]
+        };
+
+        // Default data for tests not in the provided list
+        const defaultLabs = [
+            {
+                name: "CityMed Diagnostics",
+                address: "123 Healthcare Ave, Medical District, Cityville 10001",
+                image: "https://placehold.co/100x100/3498db/white?text=CityMed",
+                rating: 4.7,
+                waitTime: "15-30 min"
+            },
+            {
+                name: "Precision Labs",
+                address: "456 Biomed Plaza, Science Park, Townsville 10002",
+                image: "https://placehold.co/100x100/e74c3c/white?text=Precision",
+                rating: 4.9,
+                waitTime: "1-2 days"
+            },
+            {
+                name: "QuickTest Clinic",
+                address: "789 Wellness St, Downtown, Cityville 10003",
+                image: "https://placehold.co/100x100/2ecc71/white?text=QuickTest",
+                rating: 4.5,
+                waitTime: "10-20 min"
+            },
+            {
+                name: "Advanced Radiology Center",
+                address: "321 Imaging Blvd, Tech Center, Townsville 10004",
+                image: "https://placehold.co/100x100/9b59b6/white?text=Radiology",
+                rating: 4.8,
+                waitTime: "2-3 days"
+            },
+            {
+                name: "Community Health Lab",
+                address: "555 Main Street, Central District, Cityville 10005",
+                image: "https://placehold.co/100x100/f39c12/white?text=Community",
+                rating: 4.6,
+                waitTime: "20-40 min"
+            }
+        ];
+        
+        // Toggle category expansion
+        function toggleCategory(element) {
+            const category = element.parentElement;
+            const testsList = category.querySelector('.tests-list');
+            const icon = element.querySelector('i');
+            
+            testsList.classList.toggle('show');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+        
+        // Show labs for selected test
+        function showLabs(testName) {
+            const labsContainer = document.getElementById('labsContainer');
+            labsContainer.innerHTML = '';
+            
+            // Get labs for this test or use default if not found
+            const matchingLabs = labData[testName] || defaultLabs;
+            
+            if (matchingLabs.length === 0) {
+                labsContainer.innerHTML = `
+                    <div class="no-labs-message">
+                        <h3>No labs found for "${testName}"</h3>
+                        <p>Please try another test or check back later for updates.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Display up to 5 labs
+            const labsToShow = matchingLabs.slice(0, 5);
+            
+            labsToShow.forEach(lab => {
+                const labCard = document.createElement('div');
+                labCard.className = 'lab-card';
+                
+                labCard.innerHTML = `
+                    <div class="lab-info">
+                        <img src="${lab.image}" alt="${lab.name}" class="lab-image">
+                        <div class="lab-details">
+                            <h3 class="lab-name">${lab.name}</h3>
+                            <p class="lab-address">${lab.address}</p>
+                            <div class="lab-meta">
+                                <span><i class="fas fa-star"></i> ${lab.rating}/5</span>
+                                <span><i class="fas fa-clock"></i> ${lab.waitTime}</span>
+                                <span><i class="fas fa-flask"></i> ${testName}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-section">
+                        <h4 class="upload-title">Upload Doctor's Prescription</h4>
+                        <div class="upload-area" onclick="this.querySelector('input').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-file-medical"></i>
+                            </div>
+                            <p class="upload-text">PNG, JPG, PDF up to 5MB</p>
+                            <div class="upload-button">Select File</div>
+                            <input type="file" style="display: none;" accept=".png,.jpg,.jpeg,.pdf">
+                        </div>
+                    </div>
+                `;
+                
+                labsContainer.appendChild(labCard);
+            });
+        }
+        
+        // Animate statistics counter
+        function animateValue(id, start, end, duration, suffix = '') {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                obj.innerHTML = suffix === '%' ? `${value}${suffix}` : `${value}${suffix}`;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstCategory = document.querySelector('.category-header');
+            if (firstCategory) {
+                toggleCategory(firstCategory);
+            }
+            
+            // Add login button functionality
+            document.getElementById('toggle-login').addEventListener('click', function() {
+                alert('Login functionality would go here. This would typically open a login modal or redirect to a login page.');
+            });
+            
+            // Animate the statistics
+            setTimeout(() => {
+                animateValue('tests-completed', 0, 1250, 2000, '+');
+                animateValue('accuracy-rate', 0, 98, 2000, '%');
+                animateValue('test-types', 0, 50, 2000, '+');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
